@@ -1,0 +1,54 @@
+
+import java.util.Arrays;
+
+public class Main
+{
+     public static void permute(int[] route, int index, int[][] D, int[] bestRoute, int minDistance) {
+        if (index == route.length) {
+            int distance = 0;
+            for (int i = 0; i < route.length; i++) {
+                int j = (i + 1) % route.length;
+                distance += D[route[i]][route[j]];
+            }
+
+            if (distance < minDistance) {
+                minDistance = distance;
+                System.arraycopy(route, 0, bestRoute, 0, route.length);
+            }
+        } else {
+            for (int i = index; i < route.length; i++) {
+                swap(route, index, i);
+                permute(route, index + 1, D, bestRoute, minDistance);
+                swap(route, index, i);
+            }
+        }
+    }
+
+    public static void swap(int[] route, int i, int j) {
+        int temp = route[i];
+        route[i] = route[j];
+        route[j] = temp;
+    }
+    public static void main(String[] args) {
+       
+       
+        int[][] D = {{0, 8, 7, 6, 7},
+                     {8, 0, 1, 4, 5},
+                     {7, 1, 0, 3, 8},
+                     {6, 4, 3, 0, 9},
+                     {7, 5, 8, 9, 0}};
+        int n = D.length;
+        int[] route = new int[n];
+        for (int i = 0; i < n; i++) {
+            route[i] = i;
+        }
+
+        int[] bestRoute = new int[n];
+        int minDistance = Integer.MAX_VALUE;
+
+        permute(route, 1, D, bestRoute, minDistance);
+
+        System.out.println("Best route: " + Arrays.toString(bestRoute));
+        System.out.println("Minimum distance traveled: " + minDistance);
+    }
+}
